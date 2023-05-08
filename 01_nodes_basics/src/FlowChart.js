@@ -30,7 +30,7 @@ const edgeTypes = {
 };
 
 const nodeTypes = {
-  defaultNode: DeafaultNode,
+  defaultNode: DeafaultNode
 };
 
 export default function App({initialNodes, initialEdges}) {
@@ -39,7 +39,7 @@ export default function App({initialNodes, initialEdges}) {
   // const nodeHeight = 36;
 
   const nodeWidth = 280;
-  const nodeHeight = 80;  
+  const nodeHeight = 88;  
   
   // add coordinates to nodes
   const position = { x: 0, y: 0 };  
@@ -55,8 +55,8 @@ export default function App({initialNodes, initialEdges}) {
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ 
       rankdir: direction,
-      //ranksep: 60, // Adjust this value to increase the vertical distance between nodes
-      //nodesep: 150, // Adjust this value to increase the horizontal distance between nodes
+      ranksep: 80, // Adjust this value to increase the vertical distance between nodes
+      nodesep: 230, // Adjust this value to increase the horizontal distance between nodes
     });
   
     nodes.forEach((node) => {

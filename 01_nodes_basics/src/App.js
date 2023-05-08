@@ -4,15 +4,15 @@ import FlowChart from './FlowChart'
 
 const initialNodes = [
   { id: '1', data: { label: 'Node 1' }, type: 'defaultNode' },  
-  { id: '2', data: { label: 'Node 2' } },  
-  { id: '3', data: { label: 'Node 3' } },  
-  { id: '4', data: { label: 'Node 4' } },  
-  { id: '5', data: { label: 'Node 5' } },  
-  { id: '6', data: { label: 'Node 6' } },    
-  { id: '7', data: { label: 'Node 7' } },  
-  { id: '8', data: { label: 'Node 8' } },  
-  { id: '9', data: { label: 'Node 9' } },  
-  { id: '10', data: { label: 'Node 10' } },   
+  { id: '2', data: { label: 'Node 2' }, type: 'defaultNode' },  
+  { id: '3', data: { label: 'Node 3' }, type: 'defaultNode' },  
+  { id: '4', data: { label: 'Node 4' }, type: 'defaultNode' },  
+  { id: '5', data: { label: 'Node 5' }, type: 'defaultNode' },  
+  { id: '6', data: { label: 'Node 6' }, type: 'defaultNode' },    
+  { id: '7', data: { label: 'Node 7' }, type: 'defaultNode' },  
+  { id: '8', data: { label: 'Node 8' }, type: 'defaultNode' },  
+  { id: '9', data: { label: 'Node 9' }, type: 'defaultNode' },  
+  { id: '10', data: { label: 'Node 10' }, type: 'defaultNode' },   
 ];
 
 const initialEdges = [
