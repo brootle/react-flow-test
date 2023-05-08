@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
+// import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState, useLayoutEffect } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -9,6 +10,7 @@ import ReactFlow, {
   Panel,
   MarkerType
 } from 'reactflow';
+
 
 import 'reactflow/dist/style.css';
 
@@ -102,7 +104,7 @@ export default function App({initialNodes, initialEdges}) {
 
   const edgesWithMarker = addMarkerToEdge(edgesWithType, MarkerType.ArrowClosed);
 
-  console.log("edgesWithMarker: ", edgesWithMarker)
+  //console.log("edgesWithMarker: ", edgesWithMarker)
 
   // initial set
 
@@ -123,6 +125,55 @@ export default function App({initialNodes, initialEdges}) {
     [setEdges]
   );
 
+  const addNode = () => {
+
+    const newNodeId = '11'
+    const source = '10'
+    const target = '11'
+
+    // Check if the node with the specified ID already exists
+    const nodeExists = nodes.some((node) => node.id === newNodeId);
+
+    if (nodeExists) {
+      console.log(`Node with ID ${newNodeId} already exists.`);
+      return;
+    }    
+
+    const newNode = {
+      id: newNodeId,
+      position: position,
+      data: { label: `Node ${newNodeId}` },
+      type: 'defaultNode'
+    };
+
+    const newEdge = {
+      id: `${source}-${target}`,
+      source: source,
+      target: target,
+      type: 'floating',
+      markerEnd: { type: MarkerType.ArrowClosed }
+    };    
+
+    // setEdges((eds) => eds.concat(newEdge));
+    // setNodes((nds) => nds.concat(newNode));
+
+    let newNodes = nodes.concat(newNode)
+    //console.log("newNodes: ", newNodes)
+
+    let newEdges = edges.concat(newEdge)
+    //console.log("newEdges: ", newEdges)
+
+    const newData = getLayoutedElements(
+      newNodes,
+      newEdges
+    );        
+
+    //console.log("newData: ", newData)
+    setNodes(newData.nodes);
+    setEdges(newData.edges);
+  }
+
+
   return (
     <div className="floatingedges">
       <ReactFlow
@@ -135,12 +186,17 @@ export default function App({initialNodes, initialEdges}) {
           edgeTypes={edgeTypes}
           nodeTypes={nodeTypes}
           connectionLineComponent={FloatingConnectionLine}
-      >
+      >      
           <Controls />
           <MiniMap zoomable pannable/>
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-right">
-              <div>TODO: Panel</div>
+              <div>
+                <div>TODO: Panel</div>
+                <div>
+                  <button onClick={addNode}>Add Node 11</button>
+                </div>
+              </div>
           </Panel>
       </ReactFlow>
     </div>
