@@ -23,3 +23,45 @@ code {
 .floatingedges .react-flow__handle {
   opacity: 0;
 }
+
+/* .react-flow__edge-label{
+  transform: translateX(-50%);
+} */
+
+.react-flow__edge-condition{
+  position: absolute;
+
+  font-size: 12px;
+
+  width: 48px;
+  height: 24px;
+
+  line-height: 23px;
+  
+  text-align: center;
+  border-radius: 4px;  
+  box-sizing: border-box;
+}
+
+.react-flow__edge-condition--true{
+  color:#45B25D;
+  background: #F1FFF4;
+  border: 1px dashed #45B25D;
+}
+
+.react-flow__edge-condition--false{
+  color: #D65555;
+  background: #FFE8E8;
+  border: 1px dashed #D65555;
+}
+
+.defaultNode{
+  width: 280px;
+  height: 80px;
+  background: white;
+  text-align: center;
+  vertical-align: middle;
+  border: 1.5px solid #E0E1E5;
+  box-shadow: 22px 35px 17px rgba(171, 171, 171, 0.01), 12px 20px 14px rgba(171, 171, 171, 0.05), 6px 9px 10px rgba(171, 171, 171, 0.09), 1px 2px 6px rgba(171, 171, 171, 0.1), 0px 0px 0px rgba(171, 171, 171, 0.1);
+  border-radius: 8px;
+}

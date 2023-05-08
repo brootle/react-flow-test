@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -17,8 +17,9 @@ import './index.css';
 import FloatingEdge from './FloatingEdge.js';
 import FloatingConnectionLine from './FloatingConnectionLine.js';
 
-import dagre from 'dagre';
+import DeafaultNode from './DeafaultNode';
 
+import dagre from 'dagre';
 
 // see https://reactflow.dev/docs/examples/layout/dagre/
 const dagreGraph = new dagre.graphlib.Graph();
@@ -28,10 +29,17 @@ const edgeTypes = {
   floating: FloatingEdge
 };
 
+const nodeTypes = {
+  defaultNode: DeafaultNode,
+};
+
 export default function App({initialNodes, initialEdges}) {
 
-  const nodeWidth = 172;
-  const nodeHeight = 36;
+  // const nodeWidth = 172;
+  // const nodeHeight = 36;
+
+  const nodeWidth = 280;
+  const nodeHeight = 80;  
   
   // add coordinates to nodes
   const position = { x: 0, y: 0 };  
@@ -42,9 +50,14 @@ export default function App({initialNodes, initialEdges}) {
   
   const nodesWithPosition = addPositionToNodes(initialNodes, position);
 
+  // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     const isHorizontal = direction === 'LR';
-    dagreGraph.setGraph({ rankdir: direction });
+    dagreGraph.setGraph({ 
+      rankdir: direction,
+      //ranksep: 60, // Adjust this value to increase the vertical distance between nodes
+      //nodesep: 150, // Adjust this value to increase the horizontal distance between nodes
+    });
   
     nodes.forEach((node) => {
       dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
@@ -120,6 +133,7 @@ export default function App({initialNodes, initialEdges}) {
           onConnect={onConnect}
           fitView
           edgeTypes={edgeTypes}
+          nodeTypes={nodeTypes}
           connectionLineComponent={FloatingConnectionLine}
       >
           <Controls />
