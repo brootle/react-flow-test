@@ -1,0 +1,4 @@
+Check number of input and output connections to the node using store
+https://codesandbox.io/s/number-of-connections-kthmw3?file=/src/CustomNode.tsx
+
+Remove info https://reactflow.dev/docs/guides/remove-attribution/

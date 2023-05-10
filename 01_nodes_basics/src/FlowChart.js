@@ -8,9 +8,9 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   Panel,
-  MarkerType
+  MarkerType,
+  ReactFlowProvider
 } from 'reactflow';
-
 
 import 'reactflow/dist/style.css';
 
@@ -20,6 +20,8 @@ import FloatingEdge from './FloatingEdge.js';
 import FloatingConnectionLine from './FloatingConnectionLine.js';
 
 import DeafaultNode from './DeafaultNode';
+
+import ControlPanel from './ControlPanel';
 
 import dagre from 'dagre';
 
@@ -34,6 +36,8 @@ const edgeTypes = {
 const nodeTypes = {
   defaultNode: DeafaultNode
 };
+
+const proOptions = { hideAttribution: true };
 
 export default function App({initialNodes, initialEdges}) {
 
@@ -127,6 +131,8 @@ export default function App({initialNodes, initialEdges}) {
 
   const addNode = () => {
 
+    console.log("nodes: ", nodes)
+
     const newNodeId = '11'
     const source = '10'
     const target = '11'
@@ -176,29 +182,33 @@ export default function App({initialNodes, initialEdges}) {
 
   return (
     <div className="floatingedges">
-      <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-          edgeTypes={edgeTypes}
-          nodeTypes={nodeTypes}
-          connectionLineComponent={FloatingConnectionLine}
-      >      
-          <Controls />
-          <MiniMap zoomable pannable/>
-          <Background variant="dots" gap={12} size={1} />
-          <Panel position="top-right">
-              <div>
-                <div>TODO: Panel</div>
+      <ReactFlowProvider>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            fitView
+            edgeTypes={edgeTypes}
+            nodeTypes={nodeTypes}
+            connectionLineComponent={FloatingConnectionLine}
+            proOptions={proOptions}
+        >      
+            <Controls />
+            <MiniMap zoomable pannable/>
+            <Background variant="dots" gap={12} size={1} />
+            {/* <Panel position="top-right">
                 <div>
-                  <button onClick={addNode}>Add Node 11</button>
+                  <div>TODO: Panel</div>
+                  <div>
+                    <button onClick={addNode}>Add Node 11</button>
+                  </div>
                 </div>
-              </div>
-          </Panel>
-      </ReactFlow>
+            </Panel> */}
+            <ControlPanel />
+        </ReactFlow>
+      </ReactFlowProvider>
     </div>
   );
 }
