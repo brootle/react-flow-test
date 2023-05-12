@@ -4,8 +4,8 @@ import { useStoreApi, useReactFlow, Panel, MarkerType, getConnectedEdges, delete
 import dagre from 'dagre';
 
 // see https://reactflow.dev/docs/examples/layout/dagre/
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
+// const dagreGraph = new dagre.graphlib.Graph();
+// dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 // see https://reactflow.dev/docs/examples/misc/use-react-flow-hook/
 
@@ -23,6 +23,9 @@ export default () => {
 
   // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
 
     console.log("nodes: ", nodes)
 
@@ -137,21 +140,6 @@ export default () => {
     //console.log("setNodes: ", setNodes)
 
   }  
-
-  const onLayout = useCallback(
-    (direction, nodes, edges) => {
-      console.log("nodes: ", nodes)
-      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-        nodes,
-        edges,
-        direction
-      );
-
-      setNodes([...layoutedNodes]);
-      setEdges([...layoutedEdges]);
-    },
-    []
-  );  
 
   const deleteNode = () => {
 
