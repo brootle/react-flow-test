@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { useStoreApi, useReactFlow, Panel, MarkerType, getConnectedEdges, deleteElements } from 'reactflow';
 
 import dagre from 'dagre';
@@ -23,6 +23,9 @@ export default () => {
 
   // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+
+    console.log("nodes: ", nodes)
+
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ 
       rankdir: direction,
@@ -128,14 +131,30 @@ export default () => {
     );        
 
     // //console.log("newData: ", newData)
-    setNodes(newData.nodes);
-    setEdges(newData.edges);
+    setNodes([...newData.nodes]);
+    setEdges([...newData.edges]);
 
     //console.log("setNodes: ", setNodes)
 
   }  
 
+  const onLayout = useCallback(
+    (direction, nodes, edges) => {
+      console.log("nodes: ", nodes)
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+        nodes,
+        edges,
+        direction
+      );
+
+      setNodes([...layoutedNodes]);
+      setEdges([...layoutedEdges]);
+    },
+    []
+  );  
+
   const deleteNode = () => {
+
     const id = "3"
 
     const { nodeInternals, edges } = store.getState();
@@ -144,8 +163,8 @@ export default () => {
         const normalizedNode = { ...node };
         delete normalizedNode.positionAbsolute;
         return normalizedNode;    
-    });     
-
+    });   
+    
     // Check if the node with the specified ID already exists
     const nodeExists = nodes.some((node) => node.id === id);
 
@@ -158,20 +177,21 @@ export default () => {
     // Remove node with specified id
     const updatedNodes = nodes.filter((node) => node.id !== id);
 
-    //console.log("updatedNodes: ", updatedNodes)
-
     // Remove all edges associated with specified node
     const updatedEdges = edges.filter(
       (edge) => edge.source !== id && edge.target !== id
     );
+    
 
     const newData = getLayoutedElements(
       updatedNodes,
       updatedEdges
     );        
   
-    setNodes(newData.nodes);
-    setEdges(newData.edges);      
+    // setNodes(newData.nodes);
+    // setEdges(newData.edges);      
+    setNodes([...newData.nodes]);
+    setEdges([...newData.edges]);    
   }
 
   const linkNode = () => {
@@ -210,8 +230,8 @@ export default () => {
         newEdges
     );        
   
-    setNodes(newData.nodes);
-    setEdges(newData.edges);      
+    setNodes([...newData.nodes]);
+    setEdges([...newData.edges]);      
   }
 
   return (

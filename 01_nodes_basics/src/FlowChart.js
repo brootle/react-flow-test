@@ -129,55 +129,55 @@ export default function App({initialNodes, initialEdges}) {
     [setEdges]
   );
 
-  const addNode = () => {
+  // const addNode = () => {
 
-    console.log("nodes: ", nodes)
+  //   console.log("nodes: ", nodes)
 
-    const newNodeId = '11'
-    const source = '10'
-    const target = '11'
+  //   const newNodeId = '11'
+  //   const source = '10'
+  //   const target = '11'
 
-    // Check if the node with the specified ID already exists
-    const nodeExists = nodes.some((node) => node.id === newNodeId);
+  //   // Check if the node with the specified ID already exists
+  //   const nodeExists = nodes.some((node) => node.id === newNodeId);
 
-    if (nodeExists) {
-      console.log(`Node with ID ${newNodeId} already exists.`);
-      return;
-    }    
+  //   if (nodeExists) {
+  //     console.log(`Node with ID ${newNodeId} already exists.`);
+  //     return;
+  //   }    
 
-    const newNode = {
-      id: newNodeId,
-      position: position,
-      data: { label: `Node ${newNodeId}` },
-      type: 'defaultNode'
-    };
+  //   const newNode = {
+  //     id: newNodeId,
+  //     position: position,
+  //     data: { label: `Node ${newNodeId}` },
+  //     type: 'defaultNode'
+  //   };
 
-    const newEdge = {
-      id: `${source}-${target}`,
-      source: source,
-      target: target,
-      type: 'floating',
-      markerEnd: { type: MarkerType.ArrowClosed }
-    };    
+  //   const newEdge = {
+  //     id: `${source}-${target}`,
+  //     source: source,
+  //     target: target,
+  //     type: 'floating',
+  //     markerEnd: { type: MarkerType.ArrowClosed }
+  //   };    
 
-    // setEdges((eds) => eds.concat(newEdge));
-    // setNodes((nds) => nds.concat(newNode));
+  //   // setEdges((eds) => eds.concat(newEdge));
+  //   // setNodes((nds) => nds.concat(newNode));
 
-    let newNodes = nodes.concat(newNode)
-    //console.log("newNodes: ", newNodes)
+  //   let newNodes = nodes.concat(newNode)
+  //   //console.log("newNodes: ", newNodes)
 
-    let newEdges = edges.concat(newEdge)
-    //console.log("newEdges: ", newEdges)
+  //   let newEdges = edges.concat(newEdge)
+  //   //console.log("newEdges: ", newEdges)
 
-    const newData = getLayoutedElements(
-      newNodes,
-      newEdges
-    );        
+  //   const newData = getLayoutedElements(
+  //     newNodes,
+  //     newEdges
+  //   );        
 
-    //console.log("newData: ", newData)
-    setNodes(newData.nodes);
-    setEdges(newData.edges);
-  }
+  //   //console.log("newData: ", newData)
+  //   setNodes(newData.nodes);
+  //   setEdges(newData.edges);
+  // }
 
 
   return (
