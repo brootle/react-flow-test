@@ -14,7 +14,7 @@ import dagre from 'dagre';
 
 export default () => {
   const store = useStoreApi();
-  const { setCenter, setNodes, setEdges, deleteElements, getNode, getEdges } = useReactFlow();
+  const { setCenter, setNodes, setEdges, deleteElements, getNode, getEdges, addEdges, addNodes } = useReactFlow();
 
 //   console.log("store.getState(): ", store.getState())
 
@@ -208,23 +208,33 @@ export default () => {
     let newEdges = edges.concat(newEdge)
     //console.log("newEdges: ", newEdges)
 
-    const newData = getLayoutedElements(
+
+    // add new node to layout screen 
+    addNodes(newNode)
+
+    // add new edge to layout screen
+    addEdges(newEdge)
+
+    // Get the start and end positions
+    const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+    const endPositions = getLayoutedElements(
       newNodes,
       newEdges
-    );        
+    ).nodes.map((node) => ({ id: node.id, ...node.position }));
 
-    //newData.nodes = createForceLayout(newData.nodes);
+    // Animate node movement
+    animateNodeMovement(startPositions, endPositions, 200, () => {
+      setNodes([...newNodes]);
+      setEdges([...newEdges]);
+    });    
 
-    // //console.log("newData: ", newData)
-    setNodes([...newData.nodes]);
-    setEdges([...newData.edges]);
+    // const newData = getLayoutedElements(
+    //   newNodes,
+    //   newEdges
+    // );        
 
-    //console.log("setNodes: ", setNodes)
-
-    // const adjustedNodes = adjustNodePositions(newData.nodes, newData.edges);
-    // setNodes([...adjustedNodes]);
-    // setEdges([...newData.edges]);    
-
+    // setNodes([...newData.nodes]);
+    // setEdges([...newData.edges]);
   }  
 
   const deleteNode = () => {
@@ -334,17 +344,29 @@ export default () => {
 
     let newEdges = edges.concat(newEdge)
 
-    const newData = getLayoutedElements(
-        nodes,
-        newEdges
-    );        
+    // add new edge to layout screen
+    addEdges(newEdge)
   
-    setNodes([...newData.nodes]);
-    setEdges([...newData.edges]);      
+    // Get the start and end positions
+    const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+    const endPositions = getLayoutedElements(
+      nodes,
+      newEdges
+    ).nodes.map((node) => ({ id: node.id, ...node.position }));
 
-    // const adjustedNodes = adjustNodePositions(newData.nodes, newData.edges);
-    // setNodes([...adjustedNodes]);
-    // setEdges([...newData.edges]);      
+    // Animate node movement
+    animateNodeMovement(startPositions, endPositions, 200, () => {
+      setNodes([...nodes]);
+      setEdges([...newEdges]);
+    });    
+
+    // const newData = getLayoutedElements(
+    //     nodes,
+    //     newEdges
+    // );        
+  
+    // setNodes([...newData.nodes]);
+    // setEdges([...newData.edges]);        
   }
 
 
