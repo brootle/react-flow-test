@@ -25,9 +25,9 @@ import ControlPanel from './ControlPanel';
 
 import dagre from 'dagre';
 
-// see https://reactflow.dev/docs/examples/layout/dagre/
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
+// // see https://reactflow.dev/docs/examples/layout/dagre/
+// const dagreGraph = new dagre.graphlib.Graph();
+// dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const edgeTypes = {
   floating: FloatingEdge
@@ -56,13 +56,37 @@ export default function App({initialNodes, initialEdges}) {
   
   const nodesWithPosition = addPositionToNodes(initialNodes, position);
 
+  function adjustNodePositions(nodes, edges, threshold = 50) {
+    const nodeById = nodes.reduce((acc, node) => {
+      acc[node.id] = node;
+      return acc;
+    }, {});
+  
+    edges.forEach((edge) => {
+      const source = nodeById[edge.source];
+      const target = nodeById[edge.target];
+  
+      if (Math.abs(source.position.x - target.position.x) < threshold) {
+        target.position.x = source.position.x;
+      }
+    });
+  
+    return nodes;
+  }  
+
   // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+
+    // see https://reactflow.dev/docs/examples/layout/dagre/
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ 
       rankdir: direction,
       ranksep: 80, // Adjust this value to increase the vertical distance between nodes
-      nodesep: 230, // Adjust this value to increase the horizontal distance between nodes
+      //nodesep: 230, // Adjust this value to increase the horizontal distance between nodes
+      nodesep: 200,
     });
   
     nodes.forEach((node) => {
@@ -90,7 +114,10 @@ export default function App({initialNodes, initialEdges}) {
       return node;
     });
   
-    return { nodes, edges };
+    // return { nodes, edges };
+    const adjustedNodes = adjustNodePositions(nodes, edges);
+
+    return { nodes: adjustedNodes, edges };
   };
 
 
@@ -194,6 +221,7 @@ export default function App({initialNodes, initialEdges}) {
             nodeTypes={nodeTypes}
             connectionLineComponent={FloatingConnectionLine}
             proOptions={proOptions}
+            //deleteKeyCode={null}
         >      
             <Controls />
             <MiniMap zoomable pannable/>

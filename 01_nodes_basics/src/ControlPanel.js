@@ -9,9 +9,12 @@ import dagre from 'dagre';
 
 // see https://reactflow.dev/docs/examples/misc/use-react-flow-hook/
 
+//import { forceSimulation, forceManyBody, forceY, forceX } from 'd3-force';
+
+
 export default () => {
   const store = useStoreApi();
-  const { setCenter, setNodes, setEdges } = useReactFlow();
+  const { setCenter, setNodes, setEdges, deleteElements, getNode, getEdges } = useReactFlow();
 
 //   console.log("store.getState(): ", store.getState())
 
@@ -21,19 +24,90 @@ export default () => {
   // add coordinates to nodes
   const position = { x: 0, y: 0 }; 
 
+  // function createForceLayout(nodes) {
+  //   const simulation = forceSimulation(nodes)
+  //     .force("charge", forceManyBody().strength(-50))
+  //     .force("forceX", forceX().strength(0.1))
+  //     .stop();
+  
+  //   for (let i = 0; i < 100; ++i) simulation.tick(); // Increase or decrease the number of ticks to adjust the simulation's effect
+  
+  //   nodes.forEach((node) => {
+  //     node.position.x = node.x;
+  //   });
+  
+  //   return nodes;
+  // }
+  
+
+  function adjustNodePositions(nodes, edges, threshold = 50) {
+    const nodeById = nodes.reduce((acc, node) => {
+      acc[node.id] = node;
+      return acc;
+    }, {});
+  
+    edges.forEach((edge) => {
+      const source = nodeById[edge.source];
+      const target = nodeById[edge.target];
+  
+      if (Math.abs(source.position.x - target.position.x) < threshold) {
+        target.position.x = source.position.x;
+      }
+    });
+  
+    return nodes;
+  }
+  
+  const animateNodeMovement = (startPositions, endPositions, duration, callback) => {
+    const startTime = performance.now();
+
+    const animationStep = () => {
+      const elapsedTime = performance.now() - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const currentPositions = startPositions
+        .filter((start) => endPositions.some((end) => end.id === start.id))
+        .map((start, index) => {
+          const end = endPositions[index];
+          return {
+            id: start.id,
+            x: start.x + progress * (end.x - start.x),
+            y: start.y + progress * (end.y - start.y),
+          };
+        });
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          const currentPosition = currentPositions.find((pos) => pos.id === node.id);
+          return currentPosition ? { ...node, position: { x: currentPosition.x, y: currentPosition.y } } : node;
+        })
+      );
+      if (progress < 1) {
+        requestAnimationFrame(animationStep);
+      } else {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      }
+    };
+    
+    requestAnimationFrame(animationStep);
+  };
+  
+    
+
   // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 
     const dagreGraph = new dagre.graphlib.Graph();
     dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-    console.log("nodes: ", nodes)
+    //console.log("nodes: ", nodes)
 
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ 
       rankdir: direction,
         ranksep: 80, // Adjust this value to increase the vertical distance between nodes
-        nodesep: 230, // Adjust this value to increase the horizontal distance between nodes
+        //nodesep: 230, // Adjust this value to increase the horizontal distance between nodes
+        nodesep: 200, // Adjust this value to increase the horizontal distance between nodes
     });
   
     nodes.forEach((node) => {
@@ -61,7 +135,13 @@ export default () => {
       return node;
     });
   
-    return { nodes, edges };
+    //return { nodes, edges };
+
+    // Add the call to adjustNodePositions here
+    const adjustedNodes = adjustNodePositions(nodes, edges);
+
+    return { nodes: adjustedNodes, edges };
+
   };
 
 
@@ -133,11 +213,17 @@ export default () => {
       newEdges
     );        
 
+    //newData.nodes = createForceLayout(newData.nodes);
+
     // //console.log("newData: ", newData)
     setNodes([...newData.nodes]);
     setEdges([...newData.edges]);
 
     //console.log("setNodes: ", setNodes)
+
+    // const adjustedNodes = adjustNodePositions(newData.nodes, newData.edges);
+    // setNodes([...adjustedNodes]);
+    // setEdges([...newData.edges]);    
 
   }  
 
@@ -170,16 +256,51 @@ export default () => {
       (edge) => edge.source !== id && edge.target !== id
     );
     
-
-    const newData = getLayoutedElements(
+    // deleteElements
+    const NodeToDelete = getNode(id)
+    //console.log("NodeToDelete: ", NodeToDelete)
+    deleteElements({nodes: [NodeToDelete]})
+  
+    // Get the start and end positions
+    const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+    const endPositions = getLayoutedElements(
       updatedNodes,
       updatedEdges
-    );        
-  
-    // setNodes(newData.nodes);
-    // setEdges(newData.edges);      
-    setNodes([...newData.nodes]);
-    setEdges([...newData.edges]);    
+    ).nodes.map((node) => ({ id: node.id, ...node.position }));
+
+    // Animate node movement
+    animateNodeMovement(startPositions, endPositions, 200, () => {
+      setNodes([...updatedNodes]);
+      setEdges([...updatedEdges]);
+    });
+
+
+
+
+    // // Set the updated nodes and edges, effectively removing the deleted node and associated edges instantly
+    // setNodes([...updatedNodes]);
+    // setEdges([...updatedEdges]);
+
+    // // Get the start and end positions
+    // const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+    // const endPositions = getLayoutedElements(
+    //   updatedNodes,
+    //   updatedEdges
+    // ).nodes.map((node) => ({ id: node.id, ...node.position }));
+
+    // // Animate node movement
+    // animateNodeMovement(startPositions, endPositions, 1000);    
+
+
+    
+
+    // const newData = getLayoutedElements(
+    //   updatedNodes,
+    //   updatedEdges
+    // );      
+ 
+    // setNodes([...newData.nodes]);
+    // setEdges([...newData.edges]);        
   }
 
   const linkNode = () => {
@@ -220,7 +341,12 @@ export default () => {
   
     setNodes([...newData.nodes]);
     setEdges([...newData.edges]);      
+
+    // const adjustedNodes = adjustNodePositions(newData.nodes, newData.edges);
+    // setNodes([...adjustedNodes]);
+    // setEdges([...newData.edges]);      
   }
+
 
   return (
     <Panel position="top-right">
@@ -236,7 +362,7 @@ export default () => {
         </div>
         <div>
             <button onClick={deleteNode}>Delete Node 3</button>
-        </div>
+        </div>      
     </Panel>
   );
 };

@@ -20,6 +20,7 @@ function FloatingEdge({ id, source, target, markerEnd, style, data }) {
     targetPosition: targetPos,
     targetX: tx,
     targetY: ty,
+    borderRadius: 5,
   });
 
   return (
