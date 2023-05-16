@@ -14,7 +14,7 @@ import dagre from 'dagre';
 
 export default () => {
   const store = useStoreApi();
-  const { setCenter, setNodes, setEdges, deleteElements, getNode, getEdges, addEdges, addNodes } = useReactFlow();
+  const { setCenter, setNodes, setEdges, deleteElements, getNode, getEdge, getEdges, addEdges, addNodes } = useReactFlow();
 
 //   console.log("store.getState(): ", store.getState())
 
@@ -369,6 +369,87 @@ export default () => {
     // setEdges([...newData.edges]);        
   }
 
+  const selectNode = () => {
+
+    const id = "2"
+
+    const { nodeInternals, edges } = store.getState();
+
+    const nodes = Array.from(nodeInternals).map(([, node]) => {
+        const normalizedNode = { ...node };
+        delete normalizedNode.positionAbsolute;
+        return normalizedNode;    
+    });   
+    
+    // Check if the node with the specified ID already exists
+    const nodeExists = nodes.some((node) => node.id === id);
+
+    if (!nodeExists) {
+      console.log(`Node with ID ${id} is not found.`);
+      return;
+    }    
+
+    // Set the selected field of the specified node to true
+    const updatedNodes = nodes.map((node) => {
+      if (node.id === id) {
+        return {
+          ...node,
+          selected: true,
+        };
+      }
+      return node;
+    });       
+
+    setNodes([...updatedNodes]);
+
+  }  
+
+  const removeLink = () => {
+
+    const source = '6'
+    const target = '4'
+
+    const { nodeInternals, edges } = store.getState();
+
+    const nodes = Array.from(nodeInternals).map(([, node]) => {
+        const normalizedNode = { ...node };
+        delete normalizedNode.positionAbsolute;
+        return normalizedNode;    
+    });  
+
+    // Check if the edge with the specified ID already exists
+    const edgeExists = edges.some((edge) => edge.id === `${source}-${target}`);
+
+    if(!edgeExists) {
+      console.log(`Edge with ID ${source}-${target} does not exists.`);
+      return;
+    }      
+
+    // Remove the edge with the specified source and target
+    const updatedEdges = edges.filter((edge) => edge.id !== `${source}-${target}`);
+
+    // deleteElements
+    const EdgeToDelete = getEdge(`${source}-${target}`)
+    deleteElements({edges: [EdgeToDelete]})    
+        
+
+    // Get the start and end positions
+    const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+    const endPositions = getLayoutedElements(
+      nodes,
+      updatedEdges
+    ).nodes.map((node) => ({ id: node.id, ...node.position }));
+
+    // Animate node movement
+    animateNodeMovement(startPositions, endPositions, 200, () => {
+      setNodes([...nodes]);
+      setEdges([...updatedEdges]);
+    });
+
+
+  }  
+
+  // update node https://reactflow.dev/docs/examples/nodes/update-node/
 
   return (
     <Panel position="top-right">
@@ -384,6 +465,12 @@ export default () => {
         </div>
         <div>
             <button onClick={deleteNode}>Delete Node 3</button>
+        </div> 
+        <div>
+            <button onClick={selectNode}>Select Node 2</button>
+        </div>   
+        <div>
+            <button onClick={removeLink}>Remove link 6-4</button>
         </div>      
     </Panel>
   );

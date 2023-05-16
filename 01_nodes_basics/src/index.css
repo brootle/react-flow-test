@@ -67,6 +67,10 @@ code {
   line-height: 88px;
 }
 
-/* .react-flow__node{
-  transition: 0.5s ease-in-out;
-} */
+.react-flow__node-defaultNode.selected .defaultNode{
+  border-color: #316FEA;
+}
+
+.react-flow__nodesselection-rect {
+  display: none;
+}
