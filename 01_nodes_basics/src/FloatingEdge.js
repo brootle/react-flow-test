@@ -32,6 +32,11 @@ function FloatingEdge({ id, source, target, markerEnd, style, data }) {
             markerEnd={markerEnd}
             style={style}
         />
+        <path
+            id={id + "_transparent"}
+            className="react-flow__edge-path--transparent"
+            d={edgePath}
+        />        
         {
             data?.text && 
             <>

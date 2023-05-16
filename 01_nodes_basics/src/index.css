@@ -74,3 +74,8 @@ code {
 .react-flow__nodesselection-rect {
   display: none;
 }
+
+.react-flow__edge-path--transparent{
+  fill: none;
+  stroke-width: 15px;
+}

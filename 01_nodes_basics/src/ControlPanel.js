@@ -451,6 +451,41 @@ export default () => {
 
   // update node https://reactflow.dev/docs/examples/nodes/update-node/
 
+  const updateNode = () => {
+
+    const id = "2"
+
+    const { nodeInternals, edges } = store.getState();
+
+    const nodes = Array.from(nodeInternals).map(([, node]) => {
+        const normalizedNode = { ...node };
+        delete normalizedNode.positionAbsolute;
+        return normalizedNode;    
+    });   
+    
+    // Check if the node with the specified ID already exists
+    const nodeExists = nodes.some((node) => node.id === id);
+
+    if (!nodeExists) {
+      console.log(`Node with ID ${id} is not found.`);
+      return;
+    }    
+
+    // Set the selected field of the specified node to true
+    const updatedNodes = nodes.map((node) => {
+      if (node.id === id) {
+        return {
+          ...node,
+          data: {label: "Updated"},
+        };
+      }
+      return node;
+    });       
+
+    setNodes([...updatedNodes]);
+
+  }    
+
   return (
     <Panel position="top-right">
         <div>TODO: Panel</div>
@@ -471,6 +506,9 @@ export default () => {
         </div>   
         <div>
             <button onClick={removeLink}>Remove link 6-4</button>
+        </div>  
+        <div>
+            <button onClick={updateNode}>Update Node 2</button>
         </div>      
     </Panel>
   );
