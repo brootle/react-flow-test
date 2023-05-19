@@ -25,6 +25,8 @@ import ControlPanel from './ControlPanel';
 
 import dagre from 'dagre';
 
+import { MenuContext } from './MenuContext';
+
 // // see https://reactflow.dev/docs/examples/layout/dagre/
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -206,37 +208,59 @@ export default function App({initialNodes, initialEdges}) {
   //   setEdges(newData.edges);
   // }
 
+  // const handleNodeClick = (e) => {
+  //   console.log("Node Clicked", e)
+  // }
+
+  // const handlePaneClick = () => {
+  //   console.log("Pane Clicked")
+  // }
+
+
+
+  const [openMenuId, setOpenMenuId] = useState(null);
+
+  const handleClickedOutsideOfMenu = useCallback(() => {
+    setOpenMenuId(null)
+  }, []);  
+
 
   return (
-    <div className="floatingedges">
-      <ReactFlowProvider>
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            fitView
-            edgeTypes={edgeTypes}
-            nodeTypes={nodeTypes}
-            connectionLineComponent={FloatingConnectionLine}
-            proOptions={proOptions}
-            //deleteKeyCode={null}
-        >      
-            <Controls />
-            <MiniMap zoomable pannable/>
-            <Background variant="dots" gap={12} size={1} />
-            {/* <Panel position="top-right">
-                <div>
-                  <div>TODO: Panel</div>
+    <MenuContext.Provider value={{openMenuId, setOpenMenuId }}>
+      <div className="floatingedges">
+        <ReactFlowProvider>
+          <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              fitView
+              edgeTypes={edgeTypes}
+              nodeTypes={nodeTypes}
+              connectionLineComponent={FloatingConnectionLine}
+              proOptions={proOptions}
+              // onNodeClick={closeAllMenus}
+              // onPaneClick={closeAllMenus}
+              onNodeClick={handleClickedOutsideOfMenu}
+              onPaneClick={handleClickedOutsideOfMenu}
+              //deleteKeyCode={null}
+          >      
+              <Controls />
+              <MiniMap zoomable pannable/>
+              <Background variant="dots" gap={12} size={1} />
+              {/* <Panel position="top-right">
                   <div>
-                    <button onClick={addNode}>Add Node 11</button>
+                    <div>TODO: Panel</div>
+                    <div>
+                      <button onClick={addNode}>Add Node 11</button>
+                    </div>
                   </div>
-                </div>
-            </Panel> */}
-            <ControlPanel />
-        </ReactFlow>
-      </ReactFlowProvider>
-    </div>
+              </Panel> */}
+              <ControlPanel />
+          </ReactFlow>
+        </ReactFlowProvider>
+      </div>
+    </MenuContext.Provider>
   );
 }

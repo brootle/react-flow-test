@@ -65,6 +65,7 @@ code {
   box-shadow: 22px 35px 17px rgba(171, 171, 171, 0.01), 12px 20px 14px rgba(171, 171, 171, 0.05), 6px 9px 10px rgba(171, 171, 171, 0.09), 1px 2px 6px rgba(171, 171, 171, 0.1), 0px 0px 0px rgba(171, 171, 171, 0.1);
   border-radius: 8px;
   line-height: 88px;
+  pointer-events: all;
 }
 
 .react-flow__node-defaultNode.selected .defaultNode{
@@ -78,4 +79,43 @@ code {
 .react-flow__edge-path--transparent{
   fill: none;
   stroke-width: 15px;
+}
+
+.nodeMenu{
+  position: absolute;
+  right: 11px;
+  top: 7px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuIcon{
+  height: 20px;
+  width: 20px;
+  fill: black;
+  cursor: pointer;
+}
+
+.dropdown{
+  flex-direction: column;
+  position: absolute;
+  background: gray;
+  border: 1px solid red;
+  border-radius: 5px;
+  top: 26px;
+  right: 0;
+  z-index: 99991;
+  padding: 6px 0;
+}
+
+.item{
+  cursor: pointer;
+  color: black;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 7px 10px;
+  box-sizing: border-box;
+  height: 30px;
+  white-space: nowrap;
 }

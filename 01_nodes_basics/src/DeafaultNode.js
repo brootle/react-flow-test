@@ -1,8 +1,11 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect, useRef } from 'react';
 
 import { Handle } from 'reactflow';
 
-export default memo(({ data }) => {
+import Menu from './Menu';
+
+export default memo(({id, data }) => {
+
   return (
     <>
       <Handle 
@@ -10,6 +13,7 @@ export default memo(({ data }) => {
       />
       <div className='defaultNode'>
         <strong>{data.label}</strong>
+        <Menu nodeId={id}/>
       </div>
       <Handle 
         type="source"
