@@ -64,8 +64,11 @@ code {
   border: 1.5px solid #E0E1E5;
   box-shadow: 22px 35px 17px rgba(171, 171, 171, 0.01), 12px 20px 14px rgba(171, 171, 171, 0.05), 6px 9px 10px rgba(171, 171, 171, 0.09), 1px 2px 6px rgba(171, 171, 171, 0.1), 0px 0px 0px rgba(171, 171, 171, 0.1);
   border-radius: 8px;
-  line-height: 88px;
+  /* line-height: 88px; */
   pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .react-flow__node-defaultNode.selected .defaultNode{
