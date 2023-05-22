@@ -89,6 +89,14 @@ code {
   flex-direction: column;
 }
 
+.nodeMenu .menuIcon{
+  fill: #858585;
+}
+
+.nodeMenu:hover .menuIcon{
+  fill: black;
+}
+
 .menuIcon{
   height: 20px;
   width: 20px;

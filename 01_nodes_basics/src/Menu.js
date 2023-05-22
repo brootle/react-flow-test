@@ -46,6 +46,10 @@ export default function Menu({nodeId}) {
     };
   }, [showMenu]);
 
+  const menuItemClicked = (e) => {
+    console.log("Menu item clicked: ", e.target)
+  }
+
   return (
     <div className='nodeMenu' ref={menuRef} onClick={toggleMenu}>
         <svg className='menuIcon' viewBox="0 0 20 20">
@@ -56,8 +60,8 @@ export default function Menu({nodeId}) {
             <div className="dropdown">
                 {/* <div className="item">{nodeId}</div>    */}
                 {/* <div className="item">{openMenuId}</div>   */}
-                <div className="item">Menu Item 1</div>     
-                <div className="item">Menu Item 2</div>    
+                <div className="item" onClick={menuItemClicked}>Menu Item 1</div>     
+                <div className="item" onClick={menuItemClicked}>Menu Item 2</div>    
             </div>
         )}
     </div>
