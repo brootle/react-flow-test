@@ -62,6 +62,10 @@ export default memo(({id, data }) => {
     setIsEditing(false);
   };
 
+  const handleCancelClick = () => {
+    setIsEditing(false);
+  }
+
   return (
     <>
       <Handle 
@@ -70,8 +74,9 @@ export default memo(({id, data }) => {
       <div className='defaultNode'>
         { isEditing ?
           <div>
-            <input type="text" value={editedLabel} onChange={handleInputChange} />
+            <input className='nodrag' type="text" value={editedLabel} onChange={handleInputChange} />
             <button onClick={handleSaveClick}>Save</button>
+            <button onClick={handleCancelClick}>Cancel</button>
           </div>
         :
           <strong>{data.label}</strong>

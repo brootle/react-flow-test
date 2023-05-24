@@ -259,7 +259,7 @@ export default function App({initialNodes, initialEdges}) {
               onPaneClick={handleClickedOutsideOfMenu}
               deleteKeyCode={null} // disable delete using backspace              
               //deleteKeyCode={['Delete']} // re-asign default backspace delete key to Delete key
-              nodesDraggable={false}
+              //nodesDraggable={false}
           >      
               <Controls />
               <MiniMap zoomable pannable/>
