@@ -4,9 +4,9 @@ import { useStoreApi, useReactFlow } from 'reactflow';
 
 import dagre from 'dagre';
 
-import { MenuContext } from './MenuContext';
+import { MenuContext } from './MenuContext'; 
 
-export default function Menu({nodeId}) {
+export default function Menu({nodeId, handleEditClick}) {
 
   const store = useStoreApi();
   const { setNodes, setEdges, deleteElements, getNode } = useReactFlow();
@@ -163,15 +163,15 @@ export default function Menu({nodeId}) {
 
   };  
 
-  const deleteNode = () => {
+  const deleteNode = (id) => {
 
-    const id = nodeId
+    //const id = nodeId
 
     const { nodeInternals, edges } = store.getState();
 
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });   
     
@@ -224,8 +224,9 @@ export default function Menu({nodeId}) {
             <div className="dropdown">
                 {/* <div className="item">{nodeId}</div>    */}
                 {/* <div className="item">{openMenuId}</div>   */}
-                <div className="item">Menu Item 1</div>     
-                <div className="item" onClick={deleteNode}>Delete Node</div>    
+                {/* <div className="item">Edit name</div>      */}
+                <div className="item" onClick={handleEditClick}>Edit Name</div> 
+                <div className="item" onClick={() => deleteNode(nodeId)}>Delete Node</div>    
             </div>
         )}
     </div>

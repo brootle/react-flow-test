@@ -167,7 +167,7 @@ export default () => {
     //console.log("nodeInternals: ", nodeInternals)
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });  
     // console.log("nodes: ", nodes)  
@@ -245,7 +245,7 @@ export default () => {
 
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });   
     
@@ -321,7 +321,7 @@ export default () => {
 
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });  
 
@@ -377,7 +377,7 @@ export default () => {
 
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });   
     
@@ -413,7 +413,7 @@ export default () => {
 
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });  
 
@@ -459,7 +459,7 @@ export default () => {
 
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        delete normalizedNode.positionAbsolute;
+        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });   
     

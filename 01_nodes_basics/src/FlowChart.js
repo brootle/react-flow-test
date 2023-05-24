@@ -76,6 +76,40 @@ export default function App({initialNodes, initialEdges}) {
     return nodes;
   }  
 
+  const animateNodeMovement = (startPositions, endPositions, duration, callback) => {
+    const startTime = performance.now();
+
+    const animationStep = () => {
+      const elapsedTime = performance.now() - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const currentPositions = startPositions
+        .filter((start) => endPositions.some((end) => end.id === start.id))
+        .map((start, index) => {
+          const end = endPositions[index];
+          return {
+            id: start.id,
+            x: start.x + progress * (end.x - start.x),
+            y: start.y + progress * (end.y - start.y),
+          };
+        });
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          const currentPosition = currentPositions.find((pos) => pos.id === node.id);
+          return currentPosition ? { ...node, position: { x: currentPosition.x, y: currentPosition.y } } : node;
+        })
+      );
+      if (progress < 1) {
+        requestAnimationFrame(animationStep);
+      } else {
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      }
+    };
+    
+    requestAnimationFrame(animationStep);
+  };    
+
   // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 
@@ -158,72 +192,42 @@ export default function App({initialNodes, initialEdges}) {
     [setEdges]
   );
 
-  // const addNode = () => {
-
-  //   console.log("nodes: ", nodes)
-
-  //   const newNodeId = '11'
-  //   const source = '10'
-  //   const target = '11'
-
-  //   // Check if the node with the specified ID already exists
-  //   const nodeExists = nodes.some((node) => node.id === newNodeId);
-
-  //   if (nodeExists) {
-  //     console.log(`Node with ID ${newNodeId} already exists.`);
-  //     return;
-  //   }    
-
-  //   const newNode = {
-  //     id: newNodeId,
-  //     position: position,
-  //     data: { label: `Node ${newNodeId}` },
-  //     type: 'defaultNode'
-  //   };
-
-  //   const newEdge = {
-  //     id: `${source}-${target}`,
-  //     source: source,
-  //     target: target,
-  //     type: 'floating',
-  //     markerEnd: { type: MarkerType.ArrowClosed }
-  //   };    
-
-  //   // setEdges((eds) => eds.concat(newEdge));
-  //   // setNodes((nds) => nds.concat(newNode));
-
-  //   let newNodes = nodes.concat(newNode)
-  //   //console.log("newNodes: ", newNodes)
-
-  //   let newEdges = edges.concat(newEdge)
-  //   //console.log("newEdges: ", newEdges)
-
-  //   const newData = getLayoutedElements(
-  //     newNodes,
-  //     newEdges
-  //   );        
-
-  //   //console.log("newData: ", newData)
-  //   setNodes(newData.nodes);
-  //   setEdges(newData.edges);
-  // }
-
-  // const handleNodeClick = (e) => {
-  //   console.log("Node Clicked", e)
-  // }
-
-  // const handlePaneClick = () => {
-  //   console.log("Pane Clicked")
-  // }
-
-
-
   const [openMenuId, setOpenMenuId] = useState(null);
 
   const handleClickedOutsideOfMenu = useCallback(() => {
     setOpenMenuId(null)
   }, []);  
 
+  // this can be used when there are changes to nodes or edges
+  function logChange({ type, ...rest }) {
+    //console.log(`CHANGE: ${type}`, rest);
+    if(type === 'remove'){
+
+      const {id} = rest
+
+      // Remove node with specified id
+      const updatedNodes = nodes.filter((node) => node.id !== id);
+
+      // Remove all edges associated with specified node
+      const updatedEdges = edges.filter(
+        (edge) => edge.source !== id && edge.target !== id
+      );
+      
+      // Get the start and end positions
+      const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+      const endPositions = getLayoutedElements(
+        updatedNodes,
+        updatedEdges
+      ).nodes.map((node) => ({ id: node.id, ...node.position }));
+
+      // Animate node movement
+      animateNodeMovement(startPositions, endPositions, 200, () => {
+        setNodes([...updatedNodes]);
+        setEdges([...updatedEdges]);
+      });
+
+    }
+  }
 
   return (
     <MenuContext.Provider value={{openMenuId, setOpenMenuId }}>
@@ -233,7 +237,16 @@ export default function App({initialNodes, initialEdges}) {
               nodes={nodes}
               edges={edges}
               onNodesChange={onNodesChange}
+              // onNodesChange={(changes) => {
+              //   onNodesChange(changes);
+              //   changes.forEach(logChange);
+              // }}
               onEdgesChange={onEdgesChange}
+              // onEdgesChange={(changes) => {
+              //   onEdgesChange(changes);
+              //   changes.forEach(logChange);
+              //   // console.log("changes: ", changes)
+              // }}              
               onConnect={onConnect}
               fitView
               edgeTypes={edgeTypes}
@@ -244,7 +257,9 @@ export default function App({initialNodes, initialEdges}) {
               // onPaneClick={closeAllMenus}
               onNodeClick={handleClickedOutsideOfMenu}
               onPaneClick={handleClickedOutsideOfMenu}
-              //deleteKeyCode={null}
+              deleteKeyCode={null} // disable delete using backspace              
+              //deleteKeyCode={['Delete']} // re-asign default backspace delete key to Delete key
+              nodesDraggable={false}
           >      
               <Controls />
               <MiniMap zoomable pannable/>
