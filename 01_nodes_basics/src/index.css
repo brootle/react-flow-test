@@ -137,3 +137,15 @@ code {
 .item:hover{
   background-color: #e1e1e1;
 }
+
+.nodeTooltip{
+  background: #000000b5;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.nodeTooltip h3{
+  margin: 0;
+}
