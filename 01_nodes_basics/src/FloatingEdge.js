@@ -23,15 +23,15 @@ function FloatingEdge({ id, source, target, markerEnd, style, data }) {
     borderRadius: 5,
   });
  
-  const showTooltip = (event) => {
-    const tooltipElement = document.getElementById("edgeTooltip");
-    if (tooltipElement) {
-      tooltipElement.style.left = `${event.pageX + 10}px`;
-      tooltipElement.style.top = `${event.pageY + 15}px`;
-      tooltipElement.style.display = 'block';
-      tooltipElement.innerHTML = `Link ${id}`; // Assuming you want to show the edge's text in the tooltip
-    }
-  };
+//   const showTooltip = (event) => {
+//     const tooltipElement = document.getElementById("edgeTooltip");
+//     if (tooltipElement) {
+//       tooltipElement.style.left = `${event.pageX + 10}px`;
+//       tooltipElement.style.top = `${event.pageY + 15}px`;
+//       tooltipElement.style.display = 'block';
+//       tooltipElement.innerHTML = `Link ${id}`; // Assuming you want to show the edge's text in the tooltip
+//     }
+//   };
 
   const showTooltipOnMove = (event) => {
     const tooltipElement = document.getElementById("edgeTooltip");
@@ -41,12 +41,29 @@ function FloatingEdge({ id, source, target, markerEnd, style, data }) {
     }
   };  
 
+//   const hideTooltip = () => {
+//     const tooltipElement = document.getElementById("edgeTooltip");
+//     if (tooltipElement) {
+//       tooltipElement.style.display = 'none';
+//     }
+//   };
+
+  const showTooltip = (event) => {
+    const tooltipElement = document.getElementById("edgeTooltip");
+    if (tooltipElement) {
+      tooltipElement.style.left = `${event.pageX + 10}px`;
+      tooltipElement.style.top = `${event.pageY + 15}px`;
+      tooltipElement.classList.add('visible');
+      tooltipElement.innerHTML = `Link ${id}`; // Assuming you want to show the edge's text in the tooltip
+    }
+  };
+  
   const hideTooltip = () => {
     const tooltipElement = document.getElementById("edgeTooltip");
     if (tooltipElement) {
-      tooltipElement.style.display = 'none';
+      tooltipElement.classList.remove('visible');
     }
-  };
+  };  
 
   return (
     <g className='floatingEdge' onMouseEnter={showTooltip} onMouseLeave={hideTooltip} onMouseMove={showTooltipOnMove}> 

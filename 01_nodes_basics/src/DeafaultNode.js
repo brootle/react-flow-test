@@ -115,7 +115,23 @@ export default memo(({id, data }) => {
         type="target"
       />
       {/* <div className='defaultNode' data-tooltip-id={`node_tooltip_${id}`} onMouseEnter={selectNode}> */}
-      <div className='defaultNode' onMouseEnter={() => setIsTooltipVisible(true)} onMouseLeave={() => setIsTooltipVisible(false)}>
+      {/* <div className='defaultNode' onMouseEnter={() => setIsTooltipVisible(true)} onMouseLeave={() => setIsTooltipVisible(false)} */}
+      <div className='defaultNode'
+        data-tooltip-id="nodeReactTooltip"
+        // data-tooltip-content="Hello world!"
+        data-tooltip-place="right"
+        data-tooltip-html={`
+          <div>
+            <h3>Tooltip for Node ${id}</h3>
+            <p>Here's some interesting stuff:</p>
+            <ul>
+              <li>Some</li>
+              <li>Interesting</li>
+              <li>Stuff</li>
+            </ul>
+          </div>
+        `}
+      >
         { isEditing ?
           <div>
             <input className='nodrag nopan' type="text" value={editedLabel} onChange={handleInputChange} />
@@ -128,7 +144,7 @@ export default memo(({id, data }) => {
         <Menu nodeId={id} handleEditClick={handleEditClick} />
       </div>
 
-      <NodeToolbar isVisible={isTooltipVisible} position={Position.Right}>
+      {/* <NodeToolbar isVisible={isTooltipVisible} position={Position.Right}>
         <div className='nodeTooltip'>
           <h3>Tooltip for Node {id}</h3>
           <p>Here's some interesting stuff:</p>
@@ -138,7 +154,7 @@ export default memo(({id, data }) => {
             <li>Stuff</li>
           </ul>
         </div>
-      </NodeToolbar>
+      </NodeToolbar> */}
 
       {/* <Tooltip id={`node_tooltip_${id}`}>
           <div>

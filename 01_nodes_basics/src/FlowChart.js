@@ -27,6 +27,8 @@ import dagre from 'dagre';
 
 import { MenuContext } from './MenuContext';
 
+import { Tooltip } from 'react-tooltip'
+
 // // see https://reactflow.dev/docs/examples/layout/dagre/
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -274,6 +276,8 @@ export default function App({initialNodes, initialEdges}) {
               </Panel> */}
               <ControlPanel />
               <div id="edgeTooltip" className='edgeTooltip'></div>
+              {/* <div id="nodeReactTooltip" className='nodeTooltip'></div> */}
+              <Tooltip id="nodeReactTooltip"/>
           </ReactFlow>
         </ReactFlowProvider>
       </div>
