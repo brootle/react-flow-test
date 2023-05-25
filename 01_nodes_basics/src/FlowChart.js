@@ -273,6 +273,7 @@ export default function App({initialNodes, initialEdges}) {
                   </div>
               </Panel> */}
               <ControlPanel />
+              <div id="edgeTooltip" className='edgeTooltip'></div>
           </ReactFlow>
         </ReactFlowProvider>
       </div>

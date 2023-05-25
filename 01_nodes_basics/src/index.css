@@ -149,3 +149,18 @@ code {
 .nodeTooltip h3{
   margin: 0;
 }
+
+.edgeTooltip{
+  position: absolute; 
+  /* opacity: 0;  */
+  display: none;
+  pointer-events: none;
+
+  z-index: 999;
+
+  background: #000000b5;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;  
+}

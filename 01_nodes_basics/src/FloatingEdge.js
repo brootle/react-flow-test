@@ -22,9 +22,34 @@ function FloatingEdge({ id, source, target, markerEnd, style, data }) {
     targetY: ty,
     borderRadius: 5,
   });
+ 
+  const showTooltip = (event) => {
+    const tooltipElement = document.getElementById("edgeTooltip");
+    if (tooltipElement) {
+      tooltipElement.style.left = `${event.pageX + 10}px`;
+      tooltipElement.style.top = `${event.pageY + 15}px`;
+      tooltipElement.style.display = 'block';
+      tooltipElement.innerHTML = `Link ${id}`; // Assuming you want to show the edge's text in the tooltip
+    }
+  };
+
+  const showTooltipOnMove = (event) => {
+    const tooltipElement = document.getElementById("edgeTooltip");
+    if (tooltipElement) {
+      tooltipElement.style.left = `${event.pageX + 10}px`;
+      tooltipElement.style.top = `${event.pageY + 15}px`;
+    }
+  };  
+
+  const hideTooltip = () => {
+    const tooltipElement = document.getElementById("edgeTooltip");
+    if (tooltipElement) {
+      tooltipElement.style.display = 'none';
+    }
+  };
 
   return (
-    <> 
+    <g className='floatingEdge' onMouseEnter={showTooltip} onMouseLeave={hideTooltip} onMouseMove={showTooltipOnMove}> 
         <path
             id={id}
             className="react-flow__edge-path"
@@ -89,7 +114,7 @@ function FloatingEdge({ id, source, target, markerEnd, style, data }) {
             </>    
                         
         }             
-    </>
+    </g>
   );
 }
 
