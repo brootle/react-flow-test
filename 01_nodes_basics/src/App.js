@@ -2,6 +2,8 @@ import React from 'react';
 
 import FlowChart from './FlowChart'
 
+import {ReactFlowProvider} from 'reactflow';
+
 const initialNodes = [
   { id: '1', data: { label: 'Node 1' }, type: 'defaultNode' },  
   { id: '2', data: { label: 'Node 2' }, type: 'defaultNode' },  
@@ -156,7 +158,9 @@ export default function App() {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <FlowChart initialNodes={initialNodes} initialEdges={initialEdges}/>
+      <ReactFlowProvider>
+        <FlowChart initialNodes={initialNodes} initialEdges={initialEdges}/>  
+      </ReactFlowProvider>
     </div>
   );
 }

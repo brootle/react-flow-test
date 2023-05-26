@@ -1,5 +1,5 @@
 // import React, { useCallback, useEffect } from 'react';
-import React, { useCallback, useEffect, useState, useLayoutEffect, useRef  } from 'react';
+import React, { useCallback, useState  } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -7,10 +7,13 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
-  Panel,
+  //Panel,
   MarkerType,
-  ReactFlowProvider
+  //ReactFlowProvider,
+  useReactFlow
 } from 'reactflow';
+
+
 
 import 'reactflow/dist/style.css';
 
@@ -45,18 +48,9 @@ const proOptions = { hideAttribution: true };
 
 export default function App({initialNodes, initialEdges}) {
 
-  //let globalReactFlowInstance = null
+  const { setCenter } = useReactFlow();
 
-  const reactFlowInstance = useRef(null);
-
-  // Create a ref inside your component
-  const reactFlowWrapper = useRef(null);
-  const instance = useRef(null);
-
-  // Initialize ReactFlow instance within a callback
-  const onLoad = (_instance) => {
-    instance.current = _instance;
-  };  
+  //const reactFlowInstance = useRef(null);
 
   // const nodeWidth = 172;
   // const nodeHeight = 36;
@@ -91,39 +85,39 @@ export default function App({initialNodes, initialEdges}) {
     return nodes;
   }  
 
-  const animateNodeMovement = (startPositions, endPositions, duration, callback) => {
-    const startTime = performance.now();
+  // const animateNodeMovement = (startPositions, endPositions, duration, callback) => {
+  //   const startTime = performance.now();
 
-    const animationStep = () => {
-      const elapsedTime = performance.now() - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      const currentPositions = startPositions
-        .filter((start) => endPositions.some((end) => end.id === start.id))
-        .map((start, index) => {
-          const end = endPositions[index];
-          return {
-            id: start.id,
-            x: start.x + progress * (end.x - start.x),
-            y: start.y + progress * (end.y - start.y),
-          };
-        });
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          const currentPosition = currentPositions.find((pos) => pos.id === node.id);
-          return currentPosition ? { ...node, position: { x: currentPosition.x, y: currentPosition.y } } : node;
-        })
-      );
-      if (progress < 1) {
-        requestAnimationFrame(animationStep);
-      } else {
-        if (callback && typeof callback === "function") {
-          callback();
-        }
-      }
-    };
+  //   const animationStep = () => {
+  //     const elapsedTime = performance.now() - startTime;
+  //     const progress = Math.min(elapsedTime / duration, 1);
+  //     const currentPositions = startPositions
+  //       .filter((start) => endPositions.some((end) => end.id === start.id))
+  //       .map((start, index) => {
+  //         const end = endPositions[index];
+  //         return {
+  //           id: start.id,
+  //           x: start.x + progress * (end.x - start.x),
+  //           y: start.y + progress * (end.y - start.y),
+  //         };
+  //       });
+  //     setNodes((nodes) =>
+  //       nodes.map((node) => {
+  //         const currentPosition = currentPositions.find((pos) => pos.id === node.id);
+  //         return currentPosition ? { ...node, position: { x: currentPosition.x, y: currentPosition.y } } : node;
+  //       })
+  //     );
+  //     if (progress < 1) {
+  //       requestAnimationFrame(animationStep);
+  //     } else {
+  //       if (callback && typeof callback === "function") {
+  //         callback();
+  //       }
+  //     }
+  //   };
     
-    requestAnimationFrame(animationStep);
-  };    
+  //   requestAnimationFrame(animationStep);
+  // };    
 
   // using dagre
   const getLayoutedElements = (nodes, edges, direction = 'TB') => {
@@ -214,40 +208,40 @@ export default function App({initialNodes, initialEdges}) {
   }, []);  
 
   // this can be used when there are changes to nodes or edges
-  function logChange({ type, ...rest }) {
-    //console.log(`CHANGE: ${type}`, rest);
-    if(type === 'remove'){
+  // function logChange({ type, ...rest }) {
+  //   //console.log(`CHANGE: ${type}`, rest);
+  //   if(type === 'remove'){
 
-      const {id} = rest
+  //     const {id} = rest
 
-      // Remove node with specified id
-      const updatedNodes = nodes.filter((node) => node.id !== id);
+  //     // Remove node with specified id
+  //     const updatedNodes = nodes.filter((node) => node.id !== id);
 
-      // Remove all edges associated with specified node
-      const updatedEdges = edges.filter(
-        (edge) => edge.source !== id && edge.target !== id
-      );
+  //     // Remove all edges associated with specified node
+  //     const updatedEdges = edges.filter(
+  //       (edge) => edge.source !== id && edge.target !== id
+  //     );
       
-      // Get the start and end positions
-      const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
-      const endPositions = getLayoutedElements(
-        updatedNodes,
-        updatedEdges
-      ).nodes.map((node) => ({ id: node.id, ...node.position }));
+  //     // Get the start and end positions
+  //     const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+  //     const endPositions = getLayoutedElements(
+  //       updatedNodes,
+  //       updatedEdges
+  //     ).nodes.map((node) => ({ id: node.id, ...node.position }));
 
-      // Animate node movement
-      animateNodeMovement(startPositions, endPositions, 200, () => {
-        setNodes([...updatedNodes]);
-        setEdges([...updatedEdges]);
-      });
+  //     // Animate node movement
+  //     animateNodeMovement(startPositions, endPositions, 200, () => {
+  //       setNodes([...updatedNodes]);
+  //       setEdges([...updatedEdges]);
+  //     });
 
-    }
-  }
+  //   }
+  // }
 
-  const findFirstSelectedId = (arr) => {
-      const selectedElement = arr.find((element) => element.selected === true);
-      return selectedElement ? selectedElement.id : null;
-  }  
+  // const findFirstSelectedId = (arr) => {
+  //     const selectedElement = arr.find((element) => element.selected === true);
+  //     return selectedElement ? selectedElement.id : null;
+  // }  
 
   const focusNodeById = (id) => {
     // const { nodeInternals } = store.getState();
@@ -259,21 +253,20 @@ export default function App({initialNodes, initialEdges}) {
     const y = node.position.y + node.height / 2;
     const zoom = 1.85;
 
-    //setCenter(x, y, { zoom, duration: 1000 });
-    reactFlowInstance.current.setCenter(x, y, { zoom, duration: 1000 });
-    //console.log("set center: ", id)
-    //console.log("reactFlowInstance: ", reactFlowInstance)
+    setCenter(x, y, { zoom, duration: 1000 });
+    
+    //reactFlowInstance.current.setCenter(x, y, { zoom, duration: 1000 });
   };
 
   return (
     <MenuContext.Provider value={{openMenuId, setOpenMenuId }}>
       <div className="floatingedges">
-        <ReactFlowProvider>
+        {/* <ReactFlowProvider> */}
           <ReactFlow
 
-              onInit={(instance) => {
-                reactFlowInstance.current = instance;
-              }}
+              // onInit={(instance) => {
+              //   reactFlowInstance.current = instance;
+              // }}
 
               nodes={nodes}
               edges={edges}
@@ -327,7 +320,7 @@ export default function App({initialNodes, initialEdges}) {
               {/* <div id="nodeReactTooltip" className='nodeTooltip'></div> */}
               <Tooltip id="nodeReactTooltip"/>
           </ReactFlow>
-        </ReactFlowProvider>
+        {/* </ReactFlowProvider> */}
       </div>
     </MenuContext.Provider>
   );
