@@ -160,6 +160,19 @@ export default () => {
     }
   };
 
+  const focusNodeById = (id) => {
+    const { nodeInternals } = store.getState();
+    const nodes = Array.from(nodeInternals).map(([, node]) => node);
+
+    const node = nodes.find(node => node.id === id);
+
+    const x = node.position.x + node.width / 2;
+    const y = node.position.y + node.height / 2;
+    const zoom = 1.85;
+
+    setCenter(x, y, { zoom, duration: 1000 });
+  };
+
   const addNode = () => {
     // const position = { x: 0, y: 0 };  
 
@@ -401,6 +414,8 @@ export default () => {
     });       
 
     setNodes([...updatedNodes]);
+
+    focusNodeById(id)
 
   }  
 

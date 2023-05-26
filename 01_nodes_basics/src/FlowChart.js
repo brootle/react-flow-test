@@ -1,5 +1,5 @@
 // import React, { useCallback, useEffect } from 'react';
-import React, { useCallback, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useState, useLayoutEffect, useRef  } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -44,6 +44,19 @@ const nodeTypes = {
 const proOptions = { hideAttribution: true };
 
 export default function App({initialNodes, initialEdges}) {
+
+  //let globalReactFlowInstance = null
+
+  const reactFlowInstance = useRef(null);
+
+  // Create a ref inside your component
+  const reactFlowWrapper = useRef(null);
+  const instance = useRef(null);
+
+  // Initialize ReactFlow instance within a callback
+  const onLoad = (_instance) => {
+    instance.current = _instance;
+  };  
 
   // const nodeWidth = 172;
   // const nodeHeight = 36;
@@ -231,18 +244,53 @@ export default function App({initialNodes, initialEdges}) {
     }
   }
 
+  const findFirstSelectedId = (arr) => {
+      const selectedElement = arr.find((element) => element.selected === true);
+      return selectedElement ? selectedElement.id : null;
+  }  
+
+  const focusNodeById = (id) => {
+    // const { nodeInternals } = store.getState();
+    // const nodes = Array.from(nodeInternals).map(([, node]) => node);
+
+    const node = nodes.find(node => node.id === id);
+
+    const x = node.position.x + node.width / 2;
+    const y = node.position.y + node.height / 2;
+    const zoom = 1.85;
+
+    //setCenter(x, y, { zoom, duration: 1000 });
+    reactFlowInstance.current.setCenter(x, y, { zoom, duration: 1000 });
+    //console.log("set center: ", id)
+    //console.log("reactFlowInstance: ", reactFlowInstance)
+  };
+
   return (
     <MenuContext.Provider value={{openMenuId, setOpenMenuId }}>
       <div className="floatingedges">
         <ReactFlowProvider>
           <ReactFlow
+
+              onInit={(instance) => {
+                reactFlowInstance.current = instance;
+              }}
+
               nodes={nodes}
               edges={edges}
-              onNodesChange={onNodesChange}
-              // onNodesChange={(changes) => {
-              //   onNodesChange(changes);
-              //   changes.forEach(logChange);
-              // }}
+              //onNodesChange={onNodesChange}
+              onNodesChange={(changes) => {
+
+                onNodesChange(changes);
+                //console.log("changes: ", changes)
+                
+                changes.forEach(change => {
+                  if(change?.type === "select" && change?.selected && change?.id){
+                    focusNodeById(change.id)
+                    return
+                  }
+                })
+
+              }}
               onEdgesChange={onEdgesChange}
               // onEdgesChange={(changes) => {
               //   onEdgesChange(changes);
