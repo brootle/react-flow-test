@@ -10,7 +10,8 @@ import ReactFlow, {
   //Panel,
   MarkerType,
   //ReactFlowProvider,
-  useReactFlow
+  useReactFlow,
+  useStoreApi
 } from 'reactflow';
 
 
@@ -48,6 +49,7 @@ const proOptions = { hideAttribution: true };
 
 export default function App({initialNodes, initialEdges}) {
 
+  const store = useStoreApi();
   const { setCenter } = useReactFlow();
 
   //const reactFlowInstance = useRef(null);
@@ -244,10 +246,12 @@ export default function App({initialNodes, initialEdges}) {
   // }  
 
   const focusNodeById = (id) => {
-    // const { nodeInternals } = store.getState();
-    // const nodes = Array.from(nodeInternals).map(([, node]) => node);
+    const { nodeInternals } = store.getState();
+    const nodes = Array.from(nodeInternals).map(([, node]) => node);
 
     const node = nodes.find(node => node.id === id);
+
+    //console.log("node: ", node)
 
     const x = node.position.x + node.width / 2;
     const y = node.position.y + node.height / 2;
