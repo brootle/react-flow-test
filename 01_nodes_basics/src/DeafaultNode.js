@@ -5,6 +5,8 @@ import { Handle, NodeToolbar, Position } from 'reactflow';
 
 // import { Tooltip } from 'react-tooltip' // see https://react-tooltip.com/docs/getting-started
 
+// use svg as node handle https://codesandbox.io/s/suspicious-dirac-he21ku?file=/src/CustomNode.tsx
+
 import Menu from './Menu';
 
 export default memo(({id, data }) => {

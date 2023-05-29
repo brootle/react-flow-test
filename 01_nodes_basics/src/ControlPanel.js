@@ -161,6 +161,9 @@ export default () => {
   };
 
   const focusNodeById = (id) => {
+
+    console.log("Focus on node: ", id)
+
     const { nodeInternals } = store.getState();
     const nodes = Array.from(nodeInternals).map(([, node]) => node);
 
@@ -173,82 +176,135 @@ export default () => {
     setCenter(x, y, { zoom, duration: 1000 });
   };
 
+  // const addNode = () => {
+  //   // const position = { x: 0, y: 0 };  
+
+  //   const { nodeInternals, edges } = store.getState();
+  //   const nodes = Array.from(nodeInternals).map(([, node]) => {
+  //       const normalizedNode = { ...node };
+  //       return normalizedNode;    
+  //   });  
+
+  //   const newNodeId = '11'
+  //   const source = '10'
+  //   const target = '11'
+
+  //   // Check if the node with the specified ID already exists
+  //   const nodeExists = nodes.some((node) => node.id === newNodeId);
+
+  //   if (nodeExists) {
+  //     console.log(`Node with ID ${newNodeId} already exists.`);
+  //     return;
+  //   }    
+
+  //   const newNode = {
+  //     id: newNodeId,
+  //     position: position,
+  //     data: { label: `Node ${newNodeId}` },
+  //     type: 'defaultNode'
+  //   };
+
+  //   const newEdge = {
+  //     id: `${source}-${target}`,
+  //     source: source,
+  //     target: target,
+  //     type: 'floating',
+  //     markerEnd: { type: MarkerType.ArrowClosed }
+  //   };    
+
+
+  //   let newNodes = nodes.concat(newNode)
+  //   //console.log("newNodes: ", newNodes)
+
+  //   let newEdges = edges.concat(newEdge)
+  //   //console.log("newEdges: ", newEdges)
+
+
+  //   // add new node to layout screen 
+  //   addNodes(newNode)
+
+  //   // add new edge to layout screen
+  //   addEdges(newEdge)
+
+  //   // Get the start and end positions
+  //   const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+  //   const endPositions = getLayoutedElements(
+  //     newNodes,
+  //     newEdges
+  //   ).nodes.map((node) => ({ id: node.id, ...node.position }));
+
+  //   // Animate node movement
+  //   animateNodeMovement(startPositions, endPositions, 200, () => {
+  //     setNodes([...newNodes]);
+  //     setEdges([...newEdges]);
+  //   });    
+  // }  
+
   const addNode = () => {
-    // const position = { x: 0, y: 0 };  
 
     const { nodeInternals, edges } = store.getState();
-    //console.log("nodeInternals: ", nodeInternals)
     const nodes = Array.from(nodeInternals).map(([, node]) => {
         const normalizedNode = { ...node };
-        //delete normalizedNode.positionAbsolute;
         return normalizedNode;    
     });  
-    // console.log("nodes: ", nodes)  
-
-    // console.log("edges: ", edges)
-
+  
     const newNodeId = '11'
     const source = '10'
     const target = '11'
-
+  
     // Check if the node with the specified ID already exists
     const nodeExists = nodes.some((node) => node.id === newNodeId);
-
+    const sourceNodeExists = nodes.some((node) => node.id === source);
+  
     if (nodeExists) {
       console.log(`Node with ID ${newNodeId} already exists.`);
       return;
     }    
-
+  
     const newNode = {
       id: newNodeId,
       position: position,
       data: { label: `Node ${newNodeId}` },
       type: 'defaultNode'
     };
-
-    const newEdge = {
-      id: `${source}-${target}`,
-      source: source,
-      target: target,
-      type: 'floating',
-      markerEnd: { type: MarkerType.ArrowClosed }
-    };    
-
-
+  
     let newNodes = nodes.concat(newNode)
-    //console.log("newNodes: ", newNodes)
-
-    let newEdges = edges.concat(newEdge)
-    //console.log("newEdges: ", newEdges)
-
-
+  
     // add new node to layout screen 
     addNodes(newNode)
-
-    // add new edge to layout screen
-    addEdges(newEdge)
-
-    // Get the start and end positions
-    const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
-    const endPositions = getLayoutedElements(
-      newNodes,
-      newEdges
-    ).nodes.map((node) => ({ id: node.id, ...node.position }));
-
-    // Animate node movement
-    animateNodeMovement(startPositions, endPositions, 200, () => {
-      setNodes([...newNodes]);
-      setEdges([...newEdges]);
-    });    
-
-    // const newData = getLayoutedElements(
-    //   newNodes,
-    //   newEdges
-    // );        
-
-    // setNodes([...newData.nodes]);
-    // setEdges([...newData.edges]);
-  }  
+  
+    if (sourceNodeExists) {
+      const newEdge = {
+        id: `${source}-${target}`,
+        source: source,
+        target: target,
+        type: 'floating',
+        markerEnd: { type: MarkerType.ArrowClosed }
+      };
+  
+      let newEdges = edges.concat(newEdge)
+  
+      // add new edge to layout screen
+      addEdges(newEdge)
+  
+      // Get the start and end positions
+      const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+      const endPositions = getLayoutedElements(
+        newNodes,
+        newEdges
+      ).nodes.map((node) => ({ id: node.id, ...node.position }));
+  
+      // Animate node movement
+      animateNodeMovement(startPositions, endPositions, 200, () => {
+        setNodes([...newNodes]);
+        setEdges([...newEdges]);
+      });
+    } else {
+      console.log(`Source node with ID ${source} does not exist.`);
+      setNodes([...newNodes]); // only update nodes if there's no source node to form an edge
+    }
+  }
+  
 
   const deleteNode = () => {
 
@@ -503,28 +559,34 @@ export default () => {
 
   return (
     <Panel position="top-right">
-        <div>TODO: Panel</div>
-        <div>
-            <button onClick={focusNode}>Focus Node 1</button>
+      <div className='nodePanel'>
+        <div className='nodePanelTitle'>Controls</div>
+        <div className='nodePanelBody'>
+          <div>
+              <button onClick={focusNode}>Focus Node 1</button>
+          </div>
+          <div>
+              <button onClick={addNode}>Add Node 11</button>
+          </div>
+          <div>
+              <button onClick={linkNode}>Link 10 - 4</button>
+          </div>
+          <div>
+              <button onClick={deleteNode}>Delete Node 3</button>
+          </div> 
+          <div>
+              <button onClick={selectNode}>Select Node 2</button>
+          </div>   
+          <div>
+              <button onClick={removeLink}>Remove link 6-4</button>
+          </div>  
+          <div>
+              <button onClick={updateNode}>Update Node 2</button>
+          </div>           
         </div>
-        <div>
-            <button onClick={addNode}>Add Node 11</button>
-        </div>
-        <div>
-            <button onClick={linkNode}>Link 10 - 4</button>
-        </div>
-        <div>
-            <button onClick={deleteNode}>Delete Node 3</button>
-        </div> 
-        <div>
-            <button onClick={selectNode}>Select Node 2</button>
-        </div>   
-        <div>
-            <button onClick={removeLink}>Remove link 6-4</button>
-        </div>  
-        <div>
-            <button onClick={updateNode}>Update Node 2</button>
-        </div>      
+
+      </div>
+     
     </Panel>
   );
 };

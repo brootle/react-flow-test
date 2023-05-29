@@ -179,3 +179,22 @@ code {
 .react-tooltip{
   z-index: 999;
 }
+
+.nodePanel{
+  background: #FFFFFF;
+  box-shadow: -45px 0px 18px rgba(150, 150, 150, 0.01), -25px 0px 15px rgba(150, 150, 150, 0.05), -11px 0px 11px rgba(150, 150, 150, 0.09), -3px 0px 6px rgba(150, 150, 150, 0.1), 0px 0px 0px rgba(150, 150, 150, 0.1);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.nodePanelTitle{
+  color: #0A0D36;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 24px;
+}
+
+.nodePanelBody{
+  margin-top: 10px;
+}
