@@ -206,6 +206,7 @@ export default function App({initialNodes, initialEdges}) {
   const [openMenuId, setOpenMenuId] = useState(null);
 
   const handleClickedOutsideOfMenu = useCallback(() => {
+    console.log("close all open menu")
     setOpenMenuId(null)
   }, []);  
 

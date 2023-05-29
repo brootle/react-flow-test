@@ -20,10 +20,14 @@ export default function Menu({nodeId, handleEditClick}) {
 
   const { openMenuId, setOpenMenuId } = useContext(MenuContext);
 
+  // console.log("openMenuId: ", openMenuId)
+  // console.log("nodeId: ", nodeId)
+
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef();
 
   const toggleMenu = (e) => {
+
     e.stopPropagation();
 
     if(showMenu){
@@ -35,6 +39,11 @@ export default function Menu({nodeId, handleEditClick}) {
     
   };
 
+  useEffect(() => {
+    if(!openMenuId){
+      setShowMenu(false);
+    }
+  }, [openMenuId]);
 
   useEffect(() => {
 

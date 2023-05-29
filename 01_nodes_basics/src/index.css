@@ -105,6 +105,7 @@ code {
   width: 20px;
   fill: black;
   cursor: pointer;
+  pointer-events: none;
 }
 
 .dropdown{
