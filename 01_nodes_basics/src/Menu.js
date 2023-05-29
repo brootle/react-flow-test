@@ -20,13 +20,14 @@ export default function Menu({nodeId, handleEditClick}) {
 
   const { openMenuId, setOpenMenuId } = useContext(MenuContext);
 
-  // console.log("openMenuId: ", openMenuId)
-  // console.log("nodeId: ", nodeId)
-
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef();
 
   const toggleMenu = (e) => {
+
+    // console.log("openMenuId: ", openMenuId)
+    // console.log("nodeId: ", nodeId)
+    // console.log("showMenu: ", showMenu)
 
     e.stopPropagation();
 
@@ -40,10 +41,15 @@ export default function Menu({nodeId, handleEditClick}) {
   };
 
   useEffect(() => {
-    if(!openMenuId){
+    // if(!openMenuId){
+    //   setShowMenu(false);
+    // }
+
+    if(openMenuId !== nodeId || !openMenuId){
       setShowMenu(false);
     }
-  }, [openMenuId]);
+
+  }, [openMenuId, nodeId]);
 
   useEffect(() => {
 
@@ -229,7 +235,8 @@ export default function Menu({nodeId, handleEditClick}) {
             <path d="M10.001 7.8a2.2 2.2 0 1 0 0 4.402A2.2 2.2 0 0 0 10 7.8zm-7 0a2.2 2.2 0 1 0 0 4.402A2.2 2.2 0 0 0 3 7.8zm14 0a2.2 2.2 0 1 0 0 4.402A2.2 2.2 0 0 0 17 7.8z" />
         </svg>   
 
-        {showMenu && openMenuId === nodeId && (
+        {/* {showMenu && openMenuId === nodeId && ( */}
+        {showMenu && (
             <div className="dropdown">
                 {/* <div className="item">{nodeId}</div>    */}
                 {/* <div className="item">{openMenuId}</div>   */}
