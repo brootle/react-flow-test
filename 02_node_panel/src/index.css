@@ -1,0 +1,235 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #efefef;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+.floatingedges {
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.floatingedges .react-flow__handle {
+  opacity: 0;
+}
+
+/* .react-flow__edge-label{
+  transform: translateX(-50%);
+} */
+
+.react-flow__edge-condition{
+  position: absolute;
+
+  font-size: 12px;
+
+  width: 48px;
+  height: 24px;
+
+  line-height: 23px;
+  
+  text-align: center;
+  border-radius: 4px;  
+  box-sizing: border-box;
+}
+
+.react-flow__edge-condition--true{
+  color:#45B25D;
+  background: #F1FFF4;
+  border: 1px dashed #45B25D;
+}
+
+.react-flow__edge-condition--false{
+  color: #D65555;
+  background: #FFE8E8;
+  border: 1px dashed #D65555;
+}
+
+.defaultNode{
+  width: 280px;
+  height: 88px;
+  background: white;
+  text-align: center;
+  vertical-align: middle;
+  border: 1.5px solid #E0E1E5;
+  box-shadow: 22px 35px 17px rgba(171, 171, 171, 0.01), 12px 20px 14px rgba(171, 171, 171, 0.05), 6px 9px 10px rgba(171, 171, 171, 0.09), 1px 2px 6px rgba(171, 171, 171, 0.1), 0px 0px 0px rgba(171, 171, 171, 0.1);
+  border-radius: 8px;
+  /* line-height: 88px; */
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.defaultNode.unconfigured {
+  /* Add styles for unconfigured nodes here */
+  background: #dedede;
+  color: #747474;
+}
+
+.react-flow__node-defaultNode.selected .defaultNode{
+  border-color: #316FEA;
+}
+
+.react-flow__nodesselection-rect {
+  display: none;
+}
+
+.react-flow__edge-path--transparent{
+  fill: none;
+  stroke-width: 15px;
+}
+
+.nodeMenu{
+  position: absolute;
+  right: 11px;
+  top: 7px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nodeMenu .menuIcon{
+  fill: #858585;
+}
+
+.nodeMenu:hover .menuIcon{
+  fill: black;
+}
+
+.menuIcon{
+  height: 20px;
+  width: 20px;
+  fill: black;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.dropdown{
+  flex-direction: column;
+  position: absolute;
+
+  top: 26px;
+  right: 0;
+  z-index: 99991;
+  padding: 6px 0;
+
+  border: 1.5px solid #E0E1E5;
+  box-shadow: 22px 35px 17px rgba(171, 171, 171, 0.01), 12px 20px 14px rgba(171, 171, 171, 0.05), 6px 9px 10px rgba(171, 171, 171, 0.09), 1px 2px 6px rgba(171, 171, 171, 0.1), 0px 0px 0px rgba(171, 171, 171, 0.1);
+  border-radius: 8px;
+  background: white;  
+}
+
+.item{
+  cursor: pointer;
+  color: black;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 7px 10px;
+  box-sizing: border-box;
+  height: 30px;
+  white-space: nowrap;
+}
+
+.item:hover{
+  background-color: #e1e1e1;
+}
+
+.nodeTooltip{
+  background: #000000b5;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.nodeTooltip h3{
+  margin: 0;
+}
+
+.edgeTooltip{
+  position: absolute; 
+  /* opacity: 0;  */
+  /* display: none; */
+  pointer-events: none;
+
+  z-index: 999;
+
+  background: #000000b5;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;  
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease-out;
+}
+
+
+.edgeTooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.react-tooltip{
+  z-index: 999;
+}
+
+.nodePanel{
+  background: #FFFFFF;
+  box-shadow: -45px 0px 18px rgba(150, 150, 150, 0.01), -25px 0px 15px rgba(150, 150, 150, 0.05), -11px 0px 11px rgba(150, 150, 150, 0.09), -3px 0px 6px rgba(150, 150, 150, 0.1), 0px 0px 0px rgba(150, 150, 150, 0.1);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.nodePanelTitle{
+  color: #0A0D36;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 24px;
+}
+
+.nodePanelBody{
+  margin-top: 10px;
+}
+
+.nodePanelBody__node{
+  background: #FFFFFF;
+  border: 1px solid #DBDDDF;
+  box-shadow: 22px 35px 17px rgba(171, 171, 171, 0.01), 12px 20px 14px rgba(171, 171, 171, 0.05), 6px 9px 10px rgba(171, 171, 171, 0.09), 1px 2px 6px rgba(171, 171, 171, 0.1), 0px 0px 0px rgba(171, 171, 171, 0.1);
+  border-radius: 8px;
+  padding: 8px 15px;
+  box-sizing: border-box;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 24px;  
+  margin-bottom: 8px;
+
+  min-width: 215px;
+}
+
+.nodePanelBody__node-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nodePanelBody__node-comment{
+  font-weight: normal;
+  font-size: 13px;
+}
