@@ -520,6 +520,36 @@ export default () => {
 
   }  
 
+  const clickNode = () => {
+
+    const getNodeById = (nodes, id) => {
+      return nodes.find(node => node.id === id);
+    };      
+
+    const id = "2"
+
+    const { nodeInternals, edges } = store.getState();
+
+    const nodes = Array.from(nodeInternals).map(([, node]) => {
+        const normalizedNode = { ...node };
+        //delete normalizedNode.positionAbsolute;
+        return normalizedNode;    
+    });   
+    
+    // Check if the node with the specified ID already exists
+    const nodeExists = nodes.some((node) => node.id === id);
+
+    if (!nodeExists) {
+      console.log(`Node with ID ${id} is not found.`);
+      return;
+    }    
+
+    const node = getNodeById(nodes, id);
+
+    console.log("node: ", node)
+
+  }    
+
   // update node https://reactflow.dev/docs/examples/nodes/update-node/
 
   const updateNode = () => {
@@ -562,6 +592,9 @@ export default () => {
       <div className='nodePanel'>
         <div className='nodePanelTitle'>Test Controls</div>
         <div className='nodePanelBody'>
+          <div>
+              <button onClick={clickNode}>Click Node 3</button>
+          </div>          
           <div>
               <button onClick={focusNode}>Focus Node 1</button>
           </div>

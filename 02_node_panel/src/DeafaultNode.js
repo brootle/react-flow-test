@@ -133,7 +133,7 @@ export default memo(({id, data }) => {
 
     //console.log("edges: ", edges.length)
 
-    if (mountRef.current) {
+    // if (mountRef.current) {
 
       // const getNodeById = (nodes, id) => {
       //   return nodes.find(node => node.id === id);
@@ -170,9 +170,9 @@ export default memo(({id, data }) => {
       }      
   
       // Rest of your code...
-    } else {
-      mountRef.current = true;
-    }
+    // } else {
+    //   mountRef.current = true;
+    // }
   }, [sourceEdges, targetEdges]);
   
   
