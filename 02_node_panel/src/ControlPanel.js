@@ -39,6 +39,9 @@ export default () => {
   //   return nodes;
   // }
   
+  const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  };
 
   function adjustNodePositions(nodes, edges, threshold = 50) {
     const nodeById = nodes.reduce((acc, node) => {
@@ -176,103 +179,99 @@ export default () => {
     setCenter(x, y, { zoom, duration: 1000 });
   };
 
+
   // const addNode = () => {
-  //   // const position = { x: 0, y: 0 };  
 
   //   const { nodeInternals, edges } = store.getState();
   //   const nodes = Array.from(nodeInternals).map(([, node]) => {
   //       const normalizedNode = { ...node };
   //       return normalizedNode;    
   //   });  
-
+  
   //   const newNodeId = '11'
   //   const source = '10'
   //   const target = '11'
-
+  
   //   // Check if the node with the specified ID already exists
   //   const nodeExists = nodes.some((node) => node.id === newNodeId);
-
+  //   const sourceNodeExists = nodes.some((node) => node.id === source);
+  
   //   if (nodeExists) {
   //     console.log(`Node with ID ${newNodeId} already exists.`);
   //     return;
   //   }    
-
+  
   //   const newNode = {
   //     id: newNodeId,
   //     position: position,
   //     data: { label: `Node ${newNodeId}` },
   //     type: 'defaultNode'
   //   };
-
-  //   const newEdge = {
-  //     id: `${source}-${target}`,
-  //     source: source,
-  //     target: target,
-  //     type: 'floating',
-  //     markerEnd: { type: MarkerType.ArrowClosed }
-  //   };    
-
-
+  
   //   let newNodes = nodes.concat(newNode)
-  //   //console.log("newNodes: ", newNodes)
-
-  //   let newEdges = edges.concat(newEdge)
-  //   //console.log("newEdges: ", newEdges)
-
-
+  
   //   // add new node to layout screen 
   //   addNodes(newNode)
+  
+  //   if (sourceNodeExists) {
+  //     const newEdge = {
+  //       id: `${source}-${target}`,
+  //       source: source,
+  //       target: target,
+  //       type: 'floating',
+  //       markerEnd: { type: MarkerType.ArrowClosed }
+  //     };
+  
+  //     let newEdges = edges.concat(newEdge)
+  
+  //     // add new edge to layout screen
+  //     addEdges(newEdge)
+  
+  //     // Get the start and end positions
+  //     const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+  //     const endPositions = getLayoutedElements(
+  //       newNodes,
+  //       newEdges
+  //     ).nodes.map((node) => ({ id: node.id, ...node.position }));
+  
+  //     // Animate node movement
+  //     animateNodeMovement(startPositions, endPositions, 200, () => {
+  //       setNodes([...newNodes]);
+  //       setEdges([...newEdges]);
+  //     });
+  //   } else {
+  //     console.log(`Source node with ID ${source} does not exist.`);
+  //     setNodes([...newNodes]); // only update nodes if there's no source node to form an edge
+  //   }
+  // }
 
-  //   // add new edge to layout screen
-  //   addEdges(newEdge)
-
-  //   // Get the start and end positions
-  //   const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
-  //   const endPositions = getLayoutedElements(
-  //     newNodes,
-  //     newEdges
-  //   ).nodes.map((node) => ({ id: node.id, ...node.position }));
-
-  //   // Animate node movement
-  //   animateNodeMovement(startPositions, endPositions, 200, () => {
-  //     setNodes([...newNodes]);
-  //     setEdges([...newEdges]);
-  //   });    
-  // }  
-
-  const addNode = () => {
-
+  const addNode = ({id, source, target, callback}) => {
     const { nodeInternals, edges } = store.getState();
-    const nodes = Array.from(nodeInternals).map(([, node]) => {
-        const normalizedNode = { ...node };
-        return normalizedNode;    
-    });  
-  
-    const newNodeId = '11'
-    const source = '10'
-    const target = '11'
-  
+    const nodes = Array.from(nodeInternals).map(([, node]) => ({ ...node }));
+
     // Check if the node with the specified ID already exists
-    const nodeExists = nodes.some((node) => node.id === newNodeId);
-    const sourceNodeExists = nodes.some((node) => node.id === source);
-  
-    if (nodeExists) {
-      console.log(`Node with ID ${newNodeId} already exists.`);
+    if (nodes.some((node) => node.id === id)) {
+      console.log(`Node with ID ${id} already exists.`);
       return;
-    }    
-  
+    } 
+
     const newNode = {
-      id: newNodeId,
+      id: id,
       position: position,
-      data: { label: `Node ${newNodeId}` },
+      data: { label: `Node ${id}` },
       type: 'defaultNode'
     };
-  
-    let newNodes = nodes.concat(newNode)
+
+    const newNodes = [...nodes, newNode];
   
     // add new node to layout screen 
     addNodes(newNode)
   
+    // Check if the source node exists
+    const sourceNodeExists = nodes.some((node) => node.id === source);
+  
+    let newEdges = [...edges];
+
     if (sourceNodeExists) {
       const newEdge = {
         id: `${source}-${target}`,
@@ -281,29 +280,39 @@ export default () => {
         type: 'floating',
         markerEnd: { type: MarkerType.ArrowClosed }
       };
-  
-      let newEdges = edges.concat(newEdge)
+
+      newEdges = [...newEdges, newEdge];
   
       // add new edge to layout screen
       addEdges(newEdge)
-  
-      // Get the start and end positions
-      const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
-      const endPositions = getLayoutedElements(
-        newNodes,
-        newEdges
-      ).nodes.map((node) => ({ id: node.id, ...node.position }));
-  
-      // Animate node movement
-      animateNodeMovement(startPositions, endPositions, 200, () => {
-        setNodes([...newNodes]);
-        setEdges([...newEdges]);
-      });
     } else {
       console.log(`Source node with ID ${source} does not exist.`);
-      setNodes([...newNodes]); // only update nodes if there's no source node to form an edge
     }
-  }
+
+    // Get the start and end positions
+    const startPositions = nodes.map((node) => ({ id: node.id, ...node.position }));
+    const endPositions = getLayoutedElements(
+      newNodes,
+      newEdges
+    ).nodes.map((node) => ({ id: node.id, ...node.position }));
+
+    // // Animate node movement
+    // animateNodeMovement(startPositions, endPositions, 200, () => {
+    //   setNodes(newNodes);
+    //   setEdges(newEdges);
+    //   if (callback) {
+    //     callback();
+    //   }
+    // });
+
+    return new Promise((resolve) => {
+      animateNodeMovement(startPositions, endPositions, 200, () => {
+        setNodes(newNodes);
+        setEdges(newEdges);
+        resolve();
+      });
+    });    
+  }  
   
 
   const deleteNode = () => {
@@ -382,9 +391,9 @@ export default () => {
     // setEdges([...newData.edges]);        
   }
 
-  const linkNode = () => {
-    const source = '10'
-    const target = '4'
+  const linkNode = ({source, target}) => {
+    // const source = '10'
+    // const target = '4'
 
     const { nodeInternals, edges } = store.getState();
 
@@ -423,19 +432,20 @@ export default () => {
       newEdges
     ).nodes.map((node) => ({ id: node.id, ...node.position }));
 
-    // Animate node movement
-    animateNodeMovement(startPositions, endPositions, 200, () => {
-      setNodes([...nodes]);
-      setEdges([...newEdges]);
-    });    
+    // // Animate node movement
+    // animateNodeMovement(startPositions, endPositions, 200, () => {
+    //   setNodes([...nodes]);
+    //   setEdges([...newEdges]);
+    // });    
 
-    // const newData = getLayoutedElements(
-    //     nodes,
-    //     newEdges
-    // );        
-  
-    // setNodes([...newData.nodes]);
-    // setEdges([...newData.edges]);        
+    return new Promise((resolve) => {
+      animateNodeMovement(startPositions, endPositions, 200, () => {
+        setNodes([...nodes]);
+        setEdges([...newEdges]);
+        resolve();
+      });
+    });      
+      
   }
 
   const selectNode = () => {
@@ -585,7 +595,60 @@ export default () => {
 
     setNodes([...updatedNodes]);
 
-  }    
+  }   
+  
+  const clearAll = () => {
+
+    // const { nodeInternals, edges } = store.getState();
+
+    // const nodes = Array.from(nodeInternals).map(([, node]) => {
+    //     const normalizedNode = { ...node };
+    //     //delete normalizedNode.positionAbsolute;
+    //     return normalizedNode;    
+    // });   
+    
+
+
+    // deleteElements({nodes: [nodes]})
+  
+    setNodes([]);
+    setEdges([]);    
+  }
+
+  const simulate = async () => {
+
+    // 1st clear everything 
+    clearAll()
+    await sleep(1000); 
+
+    // addNode({
+    //   id: '1',
+    //   callback: () => {
+    //     console.log('Node added and animation completed!');
+    //     addNode({id: '2', source: '1', target: '2'})
+    //   },
+    // })
+
+    await addNode({id: '1'});
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '2', source: '1', target: '2'});  
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '3', source: '1', target: '3'});  
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '4'});  
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '5', source: '3', target: '5'});  
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '6', source: '5', target: '6'});  
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '7', source: '3', target: '7'});  
+    await sleep(1000);  // wait for 1 second
+    await addNode({id: '8', source: '4', target: '8'});  
+    await sleep(1000);  // wait for 1 second
+    await linkNode({source: '8', target: '6'})
+    await sleep(1000);  // wait for 1 second
+
+  }
 
   return (
     <Panel position="top-left">
@@ -599,10 +662,10 @@ export default () => {
               <button onClick={focusNode}>Focus Node 1</button>
           </div>
           <div>
-              <button onClick={addNode}>Add Node 11</button>
+              <button onClick={() => addNode({id: '11', source: '10', target: '11'})}>Add Node 11</button>
           </div>
           <div>
-              <button onClick={linkNode}>Link 10 - 4</button>
+              <button onClick={() => linkNode({source: '10', target: '4'})}>Link 10 - 4</button>
           </div>
           <div>
               <button onClick={deleteNode}>Delete Node 3</button>
@@ -615,6 +678,12 @@ export default () => {
           </div>  
           <div>
               <button onClick={updateNode}>Update Node 2</button>
+          </div>  
+          <div>
+              <button onClick={clearAll}>Clear All</button>
+          </div> 
+          <div>
+              <button onClick={simulate}>Simulate</button>
           </div>           
         </div>
 
