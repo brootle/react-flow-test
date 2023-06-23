@@ -1,0 +1,6 @@
+Check number of input and output connections to the node using store
+https://codesandbox.io/s/number-of-connections-kthmw3?file=/src/CustomNode.tsx
+
+Remove info https://reactflow.dev/docs/guides/remove-attribution/
+
+Check this example for edge routing https://codesandbox.io/s/old-rgb-k9buls using https://github.com/tisoap/react-flow-smart-edge
